@@ -33,7 +33,7 @@ jobs:
     # Downloads the uploaded files
       with:
         name: apk
-        path: .
+        path: tmp/
         
     - name: Checkout
       uses: actions/checkout@v1
