@@ -33,13 +33,11 @@ jobs:
     # Downloads the uploaded files
       with:
         name: apk
-        path: tmp/
         
     - name: Checkout
       uses: actions/checkout@v1
       
     - name: Telegram sending
       run: |
-       ls
        pip install pyTelegramBotAPI
        python3 telegram.py
