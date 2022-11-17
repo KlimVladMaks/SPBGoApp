@@ -39,9 +39,7 @@ jobs:
       uses: actions/checkout@v1
       
     - name: Telegram sending
-      env:
-       API: ${{ secrets.API }}
-       CHAT: ${{ secrets.CHAT }}
       run: |
+       ls
        pip install pyTelegramBotAPI
        python3 telegram.py
