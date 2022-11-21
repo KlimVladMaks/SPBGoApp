@@ -3,6 +3,7 @@ package com.example.spbgo
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.spbgo.databinding.ItemEventBinding
 
 // Создание адаптера для добавления элементов в RecyclerView
@@ -29,10 +30,24 @@ class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsViewHolder>() {
     override fun onBindViewHolder(holder: EventsViewHolder, position: Int) {
         val event = events[position]
         with(holder.binding) {
+
+            // Заполнение текстовых полей карточки
             eventTitleTextView.text = event.title
             weekdayTextView.text = event.dayOfWeek
             dateTextView.text = event.date
-            // Нужно дополнительно реализовать добавление изображения!
+
+            // Добавление или скрытие пометки о платности мероприятия
+            if (event.isPaid) {
+                isPaidImageView.alpha = 1F
+            }
+            else {
+                isPaidImageView.alpha = 0F
+            }
+
+            // Добавление изображения на фон карточки
+            Glide.with(eventImageView)
+                .load(event.image)
+                .into(eventImageView)
         }
     }
 

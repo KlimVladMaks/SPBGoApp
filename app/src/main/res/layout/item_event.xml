@@ -20,20 +20,34 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
+            android:id="@+id/eventsListRelativeLayout"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#CFCFCF"
-            android:padding="10dp"
+            android:padding="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:background="#CFCFCF">
+            app:layout_constraintTop_toTopOf="parent">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="#5B000000">
+
+                <ImageView
+                    android:id="@+id/eventImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#393939"
+                    android:scaleType="centerCrop" />
+
+            </FrameLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/eventTitleTextView"
@@ -44,9 +58,9 @@
                     android:layout_toStartOf="@+id/isPaidImageView"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="30sp"
-                    tools:text="Название мероприятия" />
+                    tools:text="Название мероприятия"/>
 
                 <ImageView
                     android:id="@+id/isPaidImageView"
@@ -64,9 +78,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="22sp"
-                tools:text="День недели" />
+                tools:text="День недели"
+                android:padding="10dp"/>
 
             <TextView
                 android:id="@+id/dateTextView"
@@ -74,9 +89,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="22sp"
-                tools:text="Дата" />
+                tools:text="Дата"
+                android:padding="10dp"/>
 
         </RelativeLayout>
 
