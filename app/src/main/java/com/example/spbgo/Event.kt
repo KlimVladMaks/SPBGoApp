@@ -1,12 +1,11 @@
 package com.example.spbgo
 
-import java.time.DayOfWeek
-import java.util.Date
+import java.util.*
 
 // Класс для хранения данных об отдельном мероприятии
 // Включает: ID, название, иллюстрацию, дату, день недели, платность/бесплатность
 data class Event(
-    val id: Long,
+    val id: UUID,
     val title: String,
     val image: String,
     val date: String,

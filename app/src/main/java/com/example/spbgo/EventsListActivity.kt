@@ -1,12 +1,9 @@
 package com.example.spbgo
 
-import android.location.GnssAntennaInfo.Listener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spbgo.databinding.ActivityEventsListBinding
-import com.example.spbgo.databinding.ItemEventBinding
-import java.util.EventListener
 
 
 // Activity со списком мероприятий
@@ -15,6 +12,8 @@ class EventsListActivity : AppCompatActivity() {
     // Добавляем биндинг и адаптер
     private lateinit var binding: ActivityEventsListBinding
     private lateinit var adapter: EventsAdapter
+
+    private lateinit var eventsListApi: MutableList<Event>
 
     // Добавляем геттер для получения доступа к EventsService
     private val eventsService: EventsService
@@ -42,6 +41,14 @@ class EventsListActivity : AppCompatActivity() {
         // Активируем слушателя
         eventsService.addListener(eventsListener)
 
+        // Получаем данные с сервера в отдельном потоке
+        val api = EventsApi()
+        Thread{
+            eventsListApi = api.getRequest()
+            this@EventsListActivity.runOnUiThread(java.lang.Runnable {
+                updateEventsList()
+            })
+        }.start()
     }
 
     // Удаляем слушателя для избежания утечек памяти
@@ -55,4 +62,10 @@ class EventsListActivity : AppCompatActivity() {
         adapter.events = it
     }
 
+    // Обновяем список мероприятий, используя данные с сервера
+    fun updateEventsList() {
+        adapter.events = eventsListApi
+    }
 }
+
+

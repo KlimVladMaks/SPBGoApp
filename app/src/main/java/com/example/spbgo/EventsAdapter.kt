@@ -10,7 +10,7 @@ import com.example.spbgo.databinding.ItemEventBinding
 class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsViewHolder>() {
 
     // Создаём список мероприятий
-    var events: List<Event> = emptyList()
+    var events: MutableList<Event> = mutableListOf()
         set(newValue) {
             field = newValue
             notifyDataSetChanged()
@@ -48,12 +48,18 @@ class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsViewHolder>() {
             Glide.with(eventImageView)
                 .load(event.image)
                 .into(eventImageView)
+            }
         }
+
+    fun addEvents(newEvents: List<Event>) {
+        events.addAll(newEvents)
+        notifyDataSetChanged()
     }
 
     // Подключаем холдер
     class EventsViewHolder(
         val binding: ItemEventBinding
     ): RecyclerView.ViewHolder(binding.root)
-
 }
+
+
