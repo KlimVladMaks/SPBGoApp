@@ -21,11 +21,12 @@ class MainActivity : AppCompatActivity() {
     var registrationButton:Button? = null
     var firstPassword:String? = null
 
+    @SuppressLint("ResourceAsColor")
     fun f(){
         //Toast.makeText(this@MainActivity,
             //"$isNameok $isLoginok $isPasswordok $isPasswordscoincide",Toast.LENGTH_SHORT).show()
         if (isNameok && isLoginok && isPasswordok && isPasswordscoincide) {
-            registrationButton?.setBackgroundColor(Color.BLUE)
+            registrationButton?.setBackgroundColor(R.color.colorMain)
             registrationButton?.isClickable = true
         }else{
             registrationButton?.isClickable = false

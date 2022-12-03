@@ -76,7 +76,8 @@
             android:layout_weight="1"
             android:background="@color/colorMain"
             android:text="@string/btnSignIn"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:clickable="true"/>
 
         <Button
             android:id="@+id/btnRegistration"
