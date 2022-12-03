@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SPBGo</string>
+    <string name="btnRegistration">Зарегистрироваться</string>
+    <string name="nameField">Имя</string>
+    <string name="logInField">Логин</string>
+    <string name="passwordField">Пароль</string>
+    <string name="passwordCheckField">Подтверждение пароля</string>
+    <string name="btnSignIn">Войти</string>
+</resources>

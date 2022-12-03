@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/signInActivity">
+
+    <fragment
+        android:id="@id/signInActivity"
+        android:label="signIn"
+        tools:layout="@layout/sign_in_window">
+
+        <action
+            android:id="@+id/navigate_to_activity_main"
+            app:destination="@id/mainActivity">
+        </action>
+    </fragment>
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.spbgo.MainActivity"
+        android:label="MainActivity" />
+    <activity
+        android:id="@+id/signInActivity"
+        android:name="com.example.spbgo.SignInActivity.SignInActivity"
+        android:label="SignInActivity" />
+</navigation>
