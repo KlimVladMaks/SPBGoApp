@@ -41,7 +41,7 @@ class EventsListActivity : AppCompatActivity() {
         // Активируем слушателя
         eventsService.addListener(eventsListener)
 
-        // Получаем данные с сервера в отдельном потоке
+        // Получаем данные с сервера в отдельном потоке и обновляем список мероприятий
         val api = EventsApi()
         Thread{
             eventsListApi = api.getRequest()
