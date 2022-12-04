@@ -57,9 +57,9 @@
                     android:layout_marginEnd="0dp"
                     android:layout_toStartOf="@+id/isPaidImageView"
                     android:ellipsize="end"
-                    android:lines="1"
+                    android:lines="2"
                     android:textColor="@color/white"
-                    android:textSize="30sp"
+                    android:textSize="20sp"
                     tools:text="Название мероприятия"/>
 
                 <ImageView
@@ -79,7 +79,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
                 android:textColor="@color/white"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 tools:text="День недели"
                 android:padding="10dp"/>
 
@@ -90,7 +90,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:textColor="@color/white"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 tools:text="Дата"
                 android:padding="10dp"/>
 

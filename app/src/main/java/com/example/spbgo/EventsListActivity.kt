@@ -2,6 +2,8 @@ package com.example.spbgo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.view.isVisible
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spbgo.databinding.ActivityEventsListBinding
 
@@ -13,12 +15,12 @@ class EventsListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEventsListBinding
     private lateinit var adapter: EventsAdapter
 
+    // Список мероприятий
     private lateinit var eventsListApi: MutableList<Event>
 
     // Добавляем геттер для получения доступа к EventsService
     private val eventsService: EventsService
         get() = (applicationContext as EventsApp).eventsService
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +46,9 @@ class EventsListActivity : AppCompatActivity() {
         // Получаем данные с сервера в отдельном потоке и обновляем список мероприятий
         val api = EventsApi()
         Thread{
-            eventsListApi = api.getRequest()
+            eventsListApi = api.getRequest("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIn0.yX22luuOGrofi4E0oIu5MzhEwmzjtRFs8d4CVJN0Sco")
             this@EventsListActivity.runOnUiThread(java.lang.Runnable {
+                findViewById<ContentLoadingProgressBar>(R.id.loadingPanel).isVisible = false // Убираем анимацию загрузки
                 updateEventsList()
             })
         }.start()
