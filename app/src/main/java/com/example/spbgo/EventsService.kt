@@ -2,9 +2,6 @@ package com.example.spbgo
 
 import java.util.*
 
-// "url" = "http://77.234.215.138:60866/spbgo/api/events?offset=0&limit=10"
-// "access_token" = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1In0.R3C0sJS5zsiEPakP9dj-JuQdS8UFB4l0JRg5byIlUvU"
-
 // Слушатель
 typealias EventsListener = (events: MutableList<Event>) -> Unit
 

@@ -1,12 +1,16 @@
 package com.example.spbgo
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.spbgo.databinding.ActivityEventsListBinding
-
 
 // Activity со списком мероприятий
 class EventsListActivity : AppCompatActivity() {
@@ -32,8 +36,15 @@ class EventsListActivity : AppCompatActivity() {
         binding = ActivityEventsListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Инициалиируем адаптер
-        adapter = EventsAdapter()
+        // Инициалиируем адаптер и передаём ему слушателя на случай нажатия на элемент списка
+        adapter = EventsAdapter(object: EventActionListener {
+            override fun openWebPage(event: Event) {
+                // При нажатии на карточку мероприятия, переходим на сайт с информацией о мероприятии
+                val webpage: Uri = Uri.parse(event.siteUrl)
+                val intent = Intent(Intent.ACTION_VIEW, webpage)
+                startActivity(intent)
+            }
+        })
 
         // Настройка RecyclerView
         val layoutManager = LinearLayoutManager(this)

@@ -10,7 +10,8 @@ data class Event(
     val image: String,
     val date: String,
     val dayOfWeek: String,
-    val isPaid: Boolean
+    val isPaid: Boolean,
+    val siteUrl: String
 )
 
 

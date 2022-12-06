@@ -7,6 +7,9 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 
+// "url" = "http://77.234.215.138:60866/spbgo/api/events?offset=0&limit=10"
+// "access_token" = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIn0.yX22luuOGrofi4E0oIu5MzhEwmzjtRFs8d4CVJN0Sco"
+
 class EventsApi() {
 
     // URL для обращения к серверу
@@ -27,7 +30,7 @@ class EventsApi() {
             httpURLConnection.setRequestProperty("Access-Token", access_token)
             httpURLConnection.requestMethod = "GET"
             httpURLConnection.doInput = true
-            httpURLConnection.connectTimeout = 60000
+            httpURLConnection.connectTimeout = 300000
 
             // Считываем входящие данные в формате строки
             val streamReader = InputStreamReader(httpURLConnection.inputStream)
@@ -50,13 +53,15 @@ class EventsApi() {
                 val date = eventData.getString("date")
                 val isFree = eventData.getBoolean("is_free")
                 val weekday = eventData.getString("weekday")
+                val siteUrl = eventData.getString("site_url")
                 val event = Event(
                     id = UUID.randomUUID(),
                     title = capitalize(title),
                     image = image,
                     date = formatDate(date),
                     dayOfWeek = weekday,
-                    isPaid = !isFree
+                    isPaid = !isFree,
+                    siteUrl = siteUrl
                 )
                 eventsList.add(event)
             }
