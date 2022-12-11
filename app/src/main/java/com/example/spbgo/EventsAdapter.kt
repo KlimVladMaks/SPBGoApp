@@ -1,13 +1,20 @@
 package com.example.spbgo
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spbgo.databinding.ItemEventBinding
 
+interface EventActionListener {
+    fun openWebPage(event: Event)
+}
+
 // Создание адаптера для добавления элементов в RecyclerView
-class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsViewHolder>() {
+class EventsAdapter(
+    private val actionListener: EventActionListener
+): RecyclerView.Adapter<EventsAdapter.EventsViewHolder>(), View.OnClickListener {
 
     // Создаём список мероприятий
     var events: MutableList<Event> = mutableListOf()
@@ -23,6 +30,7 @@ class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemEventBinding.inflate(inflater, parent, false)
+        binding.root.setOnClickListener(this)
         return EventsViewHolder(binding)
     }
 
@@ -30,6 +38,9 @@ class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsViewHolder>() {
     override fun onBindViewHolder(holder: EventsViewHolder, position: Int) {
         val event = events[position]
         with(holder.binding) {
+
+            // Помещаем информацию о пользователе в tag
+            holder.itemView.tag = event
 
             // Заполнение текстовых полей карточки
             eventTitleTextView.text = event.title
@@ -51,6 +62,13 @@ class EventsAdapter: RecyclerView.Adapter<EventsAdapter.EventsViewHolder>() {
             }
         }
 
+    // Реализуем функцию, запускающуюся при нажатии на элемент списка
+    override fun onClick(v: View) {
+        val event = v.tag as Event
+        actionListener.openWebPage(event)
+    }
+
+    // Функция для добавления мероприятия в список
     fun addEvents(newEvents: List<Event>) {
         events.addAll(newEvents)
         notifyDataSetChanged()

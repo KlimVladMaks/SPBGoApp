@@ -7,13 +7,16 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 
-class EventsApi {
+// "url" = "http://77.234.215.138:60866/spbgo/api/events?offset=0&limit=10"
+// "access_token" = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIn0.yX22luuOGrofi4E0oIu5MzhEwmzjtRFs8d4CVJN0Sco"
+
+class EventsApi() {
 
     // URL для обращения к серверу
-    private val url = "http://77.234.215.138:60866/spbgo/api/events?offset=0&limit=100"
+    private val url = "http://77.234.215.138:60866/spbgo/api/events?offset=0&limit=25"
 
     // Функция для отправки запроса к серверу, возвращающая список мероприятий
-    fun getRequest(): MutableList<Event> {
+    fun getRequest(access_token: String): MutableList<Event> {
 
         // Переменные для храненния полученных данных
         var eventsText: String = ""
@@ -23,12 +26,11 @@ class EventsApi {
         val httpURLConnection = URL(url).openConnection() as HttpURLConnection
 
         try {
-            // Отправляем GET-запрос
-            httpURLConnection.apply {
-                connectTimeout = 60000
-                requestMethod = "GET"
-                doInput = true
-            }
+            // Указываем параметры GET-запроса
+            httpURLConnection.setRequestProperty("Access-Token", access_token)
+            httpURLConnection.requestMethod = "GET"
+            httpURLConnection.doInput = true
+            httpURLConnection.connectTimeout = 300000
 
             // Считываем входящие данные в формате строки
             val streamReader = InputStreamReader(httpURLConnection.inputStream)
@@ -51,13 +53,15 @@ class EventsApi {
                 val date = eventData.getString("date")
                 val isFree = eventData.getBoolean("is_free")
                 val weekday = eventData.getString("weekday")
+                val siteUrl = eventData.getString("site_url")
                 val event = Event(
                     id = UUID.randomUUID(),
-                    title = title,
+                    title = capitalize(title),
                     image = image,
-                    date = date,
+                    date = formatDate(date),
                     dayOfWeek = weekday,
-                    isPaid = !isFree
+                    isPaid = !isFree,
+                    siteUrl = siteUrl
                 )
                 eventsList.add(event)
             }
@@ -72,6 +76,26 @@ class EventsApi {
         }
         // Возвращаем список мероприятий
         return eventsList
+    }
+
+    // Функция для преобразования даты в формат дд.мм.гггг
+    fun formatDate(date: String): String {
+        // Выбираем из переданной строки год, месяц и день
+        val year = date.slice(0..3)
+        val month = date.slice(5..6)
+        val day = date.slice(8..9)
+
+        // Возвращаем дату в отформатированном формате
+        return "${day}.${month}.${year}"
+    }
+
+    // Функция для добавления первой заглавной буквы в строку
+    fun capitalize(string: String): String {
+        // Берём первую букву переданной строки, приводим к верхнему регистру
+        // и помещаем в начало исходной строки
+        var first_letter = string[0].toChar()
+        first_letter = first_letter.uppercaseChar()
+        return "${first_letter}${string.drop(1)}"
     }
 }
 
