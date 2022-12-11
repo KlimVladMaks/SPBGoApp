@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    app:cardElevation="10dp">
+
+    <LinearLayout
+        android:layout_width="392dp"
+        android:layout_height="151dp"
+        android:layout_alignParentBottom="false"
+        android:layout_centerVertical="true"
+        android:layout_margin="15dp"
+
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/logInField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_texts"
+            android:hint="@string/logInField"
+            android:inputType="text"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/colorMain"
+
+            android:textSize="20sp"
+            app:met_maxCharacters="15"
+            app:met_primaryColor="@color/colorError"
+            app:met_singleLineEllipsis="true"
+            app:met_textColorHint="@color/purple_500"
+            app:met_underlineColor="@color/colorMain" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/passwordField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_texts"
+            android:hint="@string/passwordField"
+            android:inputType="textPassword"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textColorHint="@color/colorBtnRegistration"
+            android:textSize="20sp"
+
+            app:met_maxCharacters="20"
+            app:met_primaryColor="@color/colorError"
+            app:met_singleLineEllipsis="true"
+            app:met_textColorHint="@color/purple_500"
+            app:met_underlineColor="@color/colorMain" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@color/colorMain"
+            android:text="@string/btnSignIn"
+            android:textColor="@color/colorPrimary"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <Button
+            android:id="@+id/btnRegistration"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_registration"
+            android:text="@string/btnRegistration" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+</layout>
