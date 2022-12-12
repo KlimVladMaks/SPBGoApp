@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +28,12 @@ class EventsListActivity : AppCompatActivity() {
 
     // Токен для отправки запроса на сервер
     private lateinit var accessToken: String
+
+    // Имя пользователя
+    private var username = ""
+
+    // Текстовое поле для имени пользователя
+    private lateinit var usernameTextView: TextView
 
     // Добавляем геттер для получения доступа к EventsService
     private val eventsService: EventsService
@@ -63,6 +70,16 @@ class EventsListActivity : AppCompatActivity() {
         // Создаём экземпляр sharedPreferences и берём токен из памяти
         val sharedPreferences = getSharedPreferences("SPBGo", Context.MODE_PRIVATE)
         accessToken = sharedPreferences.getString("token", "").toString()
+
+        // Узнаём у сервера имя пользователя и вставляем в соответствующее текстовое поле
+        val usernameApi = UsernameApi()
+        Thread{
+            username = usernameApi.getResponse(accessToken)
+            this@EventsListActivity.runOnUiThread(java.lang.Runnable {
+                usernameTextView = findViewById(R.id.username)
+                usernameTextView.text = username
+            })
+        }.start()
 
         // Получаем данные с сервера в отдельном потоке и обновляем список мероприятий
         val api = EventsApi()
