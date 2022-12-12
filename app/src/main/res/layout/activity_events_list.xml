@@ -40,17 +40,16 @@
                 android:paddingRight="20dp"
                 android:paddingVertical="30dp"/>
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-
             <TextView
                 android:id="@+id/username"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1000"
+                android:gravity="right"
                 tools:text="Username"
                 android:textSize="20sp"
+                android:ellipsize="end"
+                android:lines="1"
                 android:textColor="@color/black"
                 android:paddingLeft="0dp"
                 android:paddingRight="10dp"
@@ -59,6 +58,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="right"
                 android:paddingLeft="0dp"
                 android:paddingRight="20dp">
 
