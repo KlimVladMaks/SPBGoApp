@@ -5,11 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.spbgo.SignInActivity.SignInActivity
 import com.example.spbgo.databinding.ActivityEventsListBinding
 
 // Activity со списком мероприятий
@@ -21,6 +21,12 @@ class EventsListActivity : AppCompatActivity() {
 
     // Список мероприятий
     private lateinit var eventsListApi: MutableList<Event>
+
+    // Кнопка выхода
+    private lateinit var exitButton: ImageView
+
+    // Токен для отправки запроса на сервер
+    private lateinit var accessToken: String
 
     // Добавляем геттер для получения доступа к EventsService
     private val eventsService: EventsService
@@ -54,15 +60,35 @@ class EventsListActivity : AppCompatActivity() {
         // Активируем слушателя
         eventsService.addListener(eventsListener)
 
+        // Создаём экземпляр sharedPreferences и берём токен из памяти
+        val sharedPreferences = getSharedPreferences("SPBGo", Context.MODE_PRIVATE)
+        accessToken = sharedPreferences.getString("token", "").toString()
+
         // Получаем данные с сервера в отдельном потоке и обновляем список мероприятий
         val api = EventsApi()
         Thread{
-            eventsListApi = api.getRequest("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIn0.yX22luuOGrofi4E0oIu5MzhEwmzjtRFs8d4CVJN0Sco")
+            eventsListApi = api.getRequest(accessToken)
             this@EventsListActivity.runOnUiThread(java.lang.Runnable {
                 findViewById<ContentLoadingProgressBar>(R.id.loadingPanel).isVisible = false // Убираем анимацию загрузки
                 updateEventsList()
             })
         }.start()
+
+        // Инициализируем кнопку выхода
+        exitButton = findViewById(R.id.exit_button)
+
+        // Устанавливаем слушателя для реагирования на нажатие на кнопку выхода
+        exitButton.setOnClickListener {
+            // Заменяем значение токена на "null"
+            val editor = sharedPreferences.edit()
+            val token = null
+            editor.putString("token", token.toString())
+            editor.apply()
+
+            // Переходим на страницу авторизации
+            val intent = Intent(this@EventsListActivity, SignInActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     // Удаляем слушателя для избежания утечек памяти
@@ -81,5 +107,3 @@ class EventsListActivity : AppCompatActivity() {
         adapter.events = eventsListApi
     }
 }
-
-
