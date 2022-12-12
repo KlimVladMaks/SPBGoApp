@@ -56,7 +56,6 @@ class SignInActivity : AppCompatActivity() {
             finish()
         }
 
-
         registrationButton?.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
