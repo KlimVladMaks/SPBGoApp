@@ -79,10 +79,9 @@ class EventsListActivity : AppCompatActivity() {
 
         // Устанавливаем слушателя для реагирования на нажатие на кнопку выхода
         exitButton.setOnClickListener {
-            // Заменяем значение токена на "null"
+            // Удаляем значение токена из памяти
             val editor = sharedPreferences.edit()
-            val token = null
-            editor.putString("token", token.toString())
+            editor.remove("token")
             editor.apply()
 
             // Переходим на страницу авторизации
