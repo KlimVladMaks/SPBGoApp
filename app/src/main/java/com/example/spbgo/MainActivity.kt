@@ -2,7 +2,7 @@ package com.example.spbgo
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -13,8 +13,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.google.gson.JsonParser.parseString
-import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.OutputStreamWriter
@@ -27,26 +25,27 @@ class MainActivity : AppCompatActivity() {
     var isLoginok = false
     var isPasswordok = false
     var isPasswordscoincide = false
-    var registrationButton:Button? = null
-    var firstPassword:String? = null
-    var name:String? = null
-    var login:String? = null
-    var password:String? = null
+    private var registrationButton: Button? = null
+    var firstPassword: String? = null
+    var name: String? = null
+    var login: String? = null
+    private var password: String? = null
 
     //data class User(var name: String, var login: String,var password: String)
     @SuppressLint("ResourceAsColor")
-    fun f(){
+    fun f() {
         /* Toast.makeText(this@MainActivity,
             "$isNameok $isLoginok $isPasswordok $isPasswordscoincide",Toast.LENGTH_SHORT).show() */
         if (isNameok && isLoginok && isPasswordok && isPasswordscoincide) {
             registrationButton?.setBackgroundColor(R.drawable.btn_registration)
             registrationButton?.isClickable = true
 
-        }else{
+        } else {
             registrationButton?.isClickable = false
             registrationButton?.setBackgroundColor(Color.GRAY)
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -140,10 +139,10 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s3: CharSequence?, start: Int, before: Int, count: Int) {
                 // Toast.makeText(this@MainActivity,s3.toString(),Toast.LENGTH_SHORT).show()
                 if (s3 != null) {
-                    if(s3.toString() == firstPassword){
+                    if (s3.toString() == firstPassword) {
                         isPasswordscoincide = true
                         f()
-                    }else{
+                    } else {
                         isPasswordscoincide = false
                         f()
                     }
@@ -167,11 +166,12 @@ class MainActivity : AppCompatActivity() {
 
                      */
                 }
-            }})
+            }
+        })
 
 
         @OptIn(DelicateCoroutinesApi::class)
-        fun sendRegistrationData(name:String,login:String,password:String){
+        fun sendRegistrationData(name: String, login: String, password: String) {
             // Create JSON using JSONObject
             val jsonObject = JSONObject()
             jsonObject.put("name", name)
@@ -209,8 +209,8 @@ class MainActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
 
                         // Convert raw JSON to pretty JSON using GSON library
-                        val gson = GsonBuilder().setPrettyPrinting().create()
-                        print(response.toString())
+                        // val gson = GsonBuilder().setPrettyPrinting().create()
+                        print(response)
                         // val prettyJson = gson.toJson(JsonParser.parseString(response))
                         Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
 
@@ -220,8 +220,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
         @OptIn(DelicateCoroutinesApi::class)
-        fun getToken(login:String,password:String) {
+        fun getToken(login: String, password: String) {
             // Create JSON using JSONObject
             val jsonObject = JSONObject()
             jsonObject.put("login", login)
@@ -258,9 +259,9 @@ class MainActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
 
                         // Convert raw JSON to pretty JSON using GSON library
-                        val gson = GsonBuilder().setPrettyPrinting().create()
-                        print(response.toString())
-                        val prettyJson = gson.toJson(parseString(response))
+                        // val gson = GsonBuilder().setPrettyPrinting().create()
+                        print(response)
+                        // val prettyJson = gson.toJson(parseString(response))
                         // Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
 
                     }
@@ -273,16 +274,25 @@ class MainActivity : AppCompatActivity() {
 
         if (registrationButton?.isClickable == true) {
             registrationButton?.setOnClickListener {
-                if(isNameok && isLoginok && isPasswordok && isPasswordscoincide){
-                    name?.let { it1 -> login?.let { it2 -> password?.let { it3 ->
-                        sendRegistrationData(it1, it2, it3)
-                        getToken(it1, it2)
-                    } } }
-                    val sharedPreference =  getSharedPreferences("SPBGo",Context.MODE_PRIVATE)
+                if (isNameok && isLoginok && isPasswordok && isPasswordscoincide) {
+                    name?.let { it1 ->
+                        login?.let { it2 ->
+                            password?.let { it3 ->
+                                sendRegistrationData(it1, it2, it3)
+                                getToken(it1, it2)
+                            }
+                        }
+                    }
+                    val sharedPreference = getSharedPreferences("SPBGo", Context.MODE_PRIVATE)
                     val editor = sharedPreference.edit()
                     val response = null
                     editor.putString("token", response.toString())
                     editor.apply()
+
+                    startActivity(Intent(this, EventsListActivity::class.java))
+
                 }
-            }}
-    }}
+            }
+        }
+    }
+}
