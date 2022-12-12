@@ -32,8 +32,8 @@
 
             app:met_underlineColor="@color/colorMain"
             app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextColor="@color/purple_500"
-            app:met_textColorHint="@color/purple_500"
+            app:met_floatingLabelTextColor="@color/colorPrimaryDark"
+            app:met_textColorHint="@color/colorPrimaryDark"
             app:met_maxCharacters="30"
             app:met_primaryColor="@color/colorError"
             app:met_singleLineEllipsis="true" />
@@ -51,8 +51,8 @@
 
             app:met_underlineColor="@color/colorMain"
             app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextColor="@color/purple_500"
-            app:met_textColorHint="@color/purple_500"
+            app:met_floatingLabelTextColor="@color/colorPrimaryDark"
+            app:met_textColorHint="@color/colorPrimaryDark"
             app:met_maxCharacters="15"
             app:met_primaryColor="@color/colorError"
             app:met_singleLineEllipsis="true" />
@@ -65,14 +65,14 @@
             android:inputType="textPassword"
             android:text=""
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@color/colorMain"
             android:textColorHint="@color/colorBtnRegistration"
             android:textSize="20sp"
 
             app:met_underlineColor="@color/colorMain"
             app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextColor="@color/purple_500"
-            app:met_textColorHint="@color/purple_500"
+            app:met_floatingLabelTextColor="@color/colorPrimaryDark"
+            app:met_textColorHint="@color/colorPrimaryDark"
             app:met_maxCharacters="20"
             app:met_primaryColor="@color/colorError"
             app:met_singleLineEllipsis="true" />
@@ -85,14 +85,14 @@
             android:inputType="textPassword"
             android:text=""
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@color/colorMain"
             android:textColorHint="@color/colorBtnRegistration"
 
             android:textSize="20sp"
             app:met_underlineColor="@color/colorMain"
             app:met_floatingLabel="highlight"
-            app:met_floatingLabelTextColor="@color/purple_500"
-            app:met_textColorHint="@color/purple_500"
+            app:met_floatingLabelTextColor="@color/colorPrimaryDark"
+            app:met_textColorHint="@color/colorPrimaryDark"
             app:met_primaryColor="@color/colorError"
             app:met_maxCharacters="20"
             app:met_singleLineEllipsis="true" />
