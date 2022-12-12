@@ -290,7 +290,7 @@ class MainActivity : AppCompatActivity() {
                     editor.apply()
 
                     startActivity(Intent(this, EventsListActivity::class.java))
-
+                    finish()
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.example.spbgo.SignInActivity;
+package com.example.spbgo.SignInActivity
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -49,20 +49,23 @@ class SignInActivity : AppCompatActivity() {
         val prefs = customPreference(this, "SPBGo")
         */
 
-        val tokenBeing = getSharedPreferences("token", MODE_PRIVATE)
+        val tokenBeing = getSharedPreferences("SPBGo", MODE_PRIVATE).contains("token")
 
-        if (tokenBeing != null) {
+        if (tokenBeing) {
             startActivity(Intent(this, EventsListActivity::class.java))
+            finish()
         }
 
 
         registrationButton?.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
 
         if (signInButton?.isClickable == true) {
             signInButton?.setOnClickListener {
                 startActivity(Intent(this, EventsListActivity::class.java))
+                finish()
             }
         }
 
