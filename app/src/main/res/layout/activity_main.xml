@@ -29,6 +29,7 @@
             android:textAlignment="center"
             android:textColor="@color/colorMain"
             android:textSize="20sp"
+            android:digits="qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNMцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ"
 
             app:met_underlineColor="@color/colorMain"
             app:met_floatingLabel="highlight"

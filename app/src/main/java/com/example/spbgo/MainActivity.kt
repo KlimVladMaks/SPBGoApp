@@ -13,11 +13,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.example.spbgo.SignInActivity.SignInActivity
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,17 +31,14 @@ class MainActivity : AppCompatActivity() {
     var firstPassword: String? = null
     var name: String? = null
     var login: String? = null
-    private var password: String? = null
 
     //data class User(var name: String, var login: String,var password: String)
     @SuppressLint("ResourceAsColor")
     fun f() {
-        /* Toast.makeText(this@MainActivity,
-            "$isNameok $isLoginok $isPasswordok $isPasswordscoincide",Toast.LENGTH_SHORT).show() */
+        // Toast.makeText( this@MainActivity, "$isNameok $isLoginok $isPasswordok $isPasswordscoincide", Toast.LENGTH_SHORT ).show()
         if (isNameok && isLoginok && isPasswordok && isPasswordscoincide) {
-            registrationButton?.setBackgroundColor(R.drawable.btn_registration)
+            registrationButton?.setBackgroundColor(Color.BLUE)
             registrationButton?.isClickable = true
-
         } else {
             registrationButton?.isClickable = false
             registrationButton?.setBackgroundColor(Color.GRAY)
@@ -70,6 +69,7 @@ class MainActivity : AppCompatActivity() {
                     if (s.length in 2..30) {
                         isNameok = true
                         name = s.toString()
+                        // Toast.makeText(this@MainActivity, name, Toast.LENGTH_SHORT).show()
                         f()
                         // registration_button.setBackgroundColor(Color.BLUE)
                         // Toast.makeText(this@MainActivity,isButtonEnabled.toString(),Toast.LENGTH_SHORT).show()
@@ -146,152 +146,125 @@ class MainActivity : AppCompatActivity() {
                         isPasswordscoincide = false
                         f()
                     }
-
-                    /*
-                    if (s3.length in 5..20) {
-                        //Toast.makeText(this@MainActivity,firstPassword,Toast.LENGTH_SHORT).show()
-
-                        if(s3.toString().equals(firstPassword) == true){
-                            isPasswordscoincide = true
-                        }else{
-                            isPasswordscoincide = false
-                        }
-                        f()
-                        // Toast.makeText(this@MainActivity,"Пароли совпадают",Toast.LENGTH_SHORT).show()
-                        // registration_button.setBackgroundColor(Color.BLUE)
-                    } else {
-                        isPasswordscoincide = false
-                        f()
-                    }
-
-                     */
                 }
             }
         })
 
+        registrationButton?.setOnClickListener {
 
-        @OptIn(DelicateCoroutinesApi::class)
-        fun sendRegistrationData(name: String, login: String, password: String) {
-            // Create JSON using JSONObject
-            val jsonObject = JSONObject()
-            jsonObject.put("name", name)
-            jsonObject.put("login", login)
-            jsonObject.put("password", password)
+            if (isNameok && isLoginok && isPasswordok && isPasswordscoincide) {
+                // Toast.makeText(this, "clicking", Toast.LENGTH_SHORT).show()
 
-            // Convert JSONObject to String
-            val jsonObjectString = jsonObject.toString()
+                sendRegistrationData(name!!, login!!, firstPassword!!)
+                getToken(login!!, firstPassword!!)
+                startActivity(Intent(this, SignInActivity::class.java))
+                finish()
 
-            GlobalScope.launch(Dispatchers.IO) {
-                val url = URL("http://77.234.215.138:60866/spbgo/api/signup")
-                val httpURLConnection = url.openConnection() as HttpURLConnection
-                httpURLConnection.requestMethod = "POST"
-                httpURLConnection.setRequestProperty(
-                    "Content-Type",
-                    "application/json"
-                ) // The format of the content we're sending to the server
-                httpURLConnection.setRequestProperty(
-                    "Accept",
-                    "application/json"
-                ) // The format of response we want to get from the server
-                httpURLConnection.doInput = true
-                httpURLConnection.doOutput = true
-
-                // Send the JSON we created
-                val outputStreamWriter = OutputStreamWriter(httpURLConnection.outputStream)
-                outputStreamWriter.write(jsonObjectString)
-                outputStreamWriter.flush()
-
-                // Check if the connection is successful
-                val responseCode = httpURLConnection.responseCode
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val response = httpURLConnection.inputStream.bufferedReader()
-                        .use { it.readText() }  // defaults to UTF-8
-                    withContext(Dispatchers.Main) {
-
-                        // Convert raw JSON to pretty JSON using GSON library
-                        // val gson = GsonBuilder().setPrettyPrinting().create()
-                        print(response)
-                        // val prettyJson = gson.toJson(JsonParser.parseString(response))
-                        Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
-
-                    }
-                } else {
-                    print("Error")
-                }
             }
         }
+    }
 
-        @OptIn(DelicateCoroutinesApi::class)
-        fun getToken(login: String, password: String) {
-            // Create JSON using JSONObject
-            val jsonObject = JSONObject()
-            jsonObject.put("login", login)
-            jsonObject.put("password", password)
 
-            // Convert JSONObject to String
-            val jsonObjectString = jsonObject.toString()
+    @OptIn(DelicateCoroutinesApi::class)
+    fun sendRegistrationData(name: String, login: String, password: String) {
+        // Create JSON using JSONObject
+        val jsonObject = JSONObject()
+        jsonObject.put("name", name)
+        jsonObject.put("login", login)
+        jsonObject.put("password", password)
 
-            GlobalScope.launch(Dispatchers.IO) {
-                val url = URL("http://77.234.215.138:60866/spbgo/api/signin")
-                val httpURLConnection = url.openConnection() as HttpURLConnection
-                httpURLConnection.requestMethod = "POST"
-                httpURLConnection.setRequestProperty(
-                    "Content-Type",
-                    "application/json"
-                ) // The format of the content we're sending to the server
-                httpURLConnection.setRequestProperty(
-                    "Accept",
-                    "application/json"
-                ) // The format of response we want to get from the server
-                httpURLConnection.doInput = true
-                httpURLConnection.doOutput = true
+        // Convert JSONObject to String
+        val jsonObjectString = jsonObject.toString()
 
-                // Send the JSON we created
-                val outputStreamWriter = OutputStreamWriter(httpURLConnection.outputStream)
-                outputStreamWriter.write(jsonObjectString)
-                outputStreamWriter.flush()
+        GlobalScope.launch(Dispatchers.IO) {
+            val url = URL("http://77.234.215.138:60866/spbgo/api/signup")
+            val httpURLConnection = url.openConnection() as HttpURLConnection
+            httpURLConnection.requestMethod = "POST"
+            httpURLConnection.setRequestProperty(
+                "Content-Type",
+                "application/json"
+            ) // The format of the content we're sending to the server
+            httpURLConnection.setRequestProperty(
+                "Accept",
+                "application/json"
+            ) // The format of response we want to get from the server
+            httpURLConnection.doInput = true
+            httpURLConnection.doOutput = true
 
-                // Check if the connection is successful
-                val responseCode = httpURLConnection.responseCode
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val response = httpURLConnection.inputStream.bufferedReader()
-                        .use { it.readText() }  // defaults to UTF-8
-                    withContext(Dispatchers.Main) {
+            // Send the JSON we created
+            val outputStreamWriter = OutputStreamWriter(httpURLConnection.outputStream)
+            outputStreamWriter.write(jsonObjectString)
+            outputStreamWriter.flush()
 
-                        // Convert raw JSON to pretty JSON using GSON library
-                        // val gson = GsonBuilder().setPrettyPrinting().create()
-                        print(response)
-                        // val prettyJson = gson.toJson(parseString(response))
-                        // Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
+            // Check if the connection is successful
+            val responseCode = httpURLConnection.responseCode
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                val response = httpURLConnection.inputStream.bufferedReader()
+                    .use { it.readText() }  // defaults to UTF-8
+                withContext(Dispatchers.Main) {
 
-                    }
-                } else {
-                    print("Error")
+                    // Convert raw JSON to pretty JSON using GSON library
+                    // val gson = GsonBuilder().setPrettyPrinting().create()
+                    print(response)
+                    // val prettyJson = gson.toJson(JsonParser.parseString(response))
+                    Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
+
                 }
+            } else {
+                print("Error")
             }
-
         }
+    }
 
-        if (registrationButton?.isClickable == true) {
-            registrationButton?.setOnClickListener {
-                if (isNameok && isLoginok && isPasswordok && isPasswordscoincide) {
-                    name?.let { it1 ->
-                        login?.let { it2 ->
-                            password?.let { it3 ->
-                                sendRegistrationData(it1, it2, it3)
-                                getToken(it1, it2)
-                            }
-                        }
-                    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun getToken(login: String, password: String) {
+        // Create JSON using JSONObject
+        val jsonObject = JSONObject()
+        jsonObject.put("login", login)
+        jsonObject.put("password", password)
+
+        // Convert JSONObject to String
+        val jsonObjectString = jsonObject.toString()
+
+        GlobalScope.launch(Dispatchers.IO) {
+            val url = URL("http://77.234.215.138:60866/spbgo/api/signin")
+            val httpURLConnection = url.openConnection() as HttpURLConnection
+            httpURLConnection.requestMethod = "POST"
+            httpURLConnection.setRequestProperty(
+                "Content-Type",
+                "application/json"
+            ) // The format of the content we're sending to the server
+            httpURLConnection.setRequestProperty(
+                "Accept",
+                "application/json"
+            ) // The format of response we want to get from the server
+            httpURLConnection.doInput = true
+            httpURLConnection.doOutput = true
+
+            // Send the JSON we created
+            val outputStreamWriter = OutputStreamWriter(httpURLConnection.outputStream)
+            outputStreamWriter.write(jsonObjectString)
+            outputStreamWriter.flush()
+
+            // Check if the connection is successful
+            val responseCode = httpURLConnection.responseCode
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                val response = httpURLConnection.inputStream.bufferedReader()
+                    .use { it.readText() }  // defaults to UTF-8
+                withContext(Dispatchers.Main) {
+                    // Convert raw JSON to pretty JSON using GSON library
+                    // val gson = GsonBuilder().setPrettyPrinting().create()
+                    print(response)
+                    // val prettyJson = gson.toJson(parseString(response))
+                    // Toast.makeText(this@MainActivity, response, Toast.LENGTH_SHORT).show()
                     val sharedPreference = getSharedPreferences("SPBGo", Context.MODE_PRIVATE)
                     val editor = sharedPreference.edit()
-                    val response = null
-                    editor.putString("token", response.toString())
+                    editor.putString("token", response)
                     editor.apply()
-
-                    startActivity(Intent(this, EventsListActivity::class.java))
-                    finish()
                 }
+            } else {
+                print("Error")
             }
         }
     }
