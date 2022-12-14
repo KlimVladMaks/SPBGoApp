@@ -1,12 +1,12 @@
 package com.example.spbgo.SignInActivity
 
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -42,6 +42,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in_window)
@@ -58,7 +59,6 @@ class SignInActivity : AppCompatActivity() {
         */
 
         val tokenBeing = getSharedPreferences("SPBGo", MODE_PRIVATE).contains("token")
-
         if (tokenBeing) {
             // val token = getSharedPreferences("SPBGo", MODE_PRIVATE).getString("token", "-1")
             // Toast.makeText(this, token, Toast.LENGTH_SHORT).show()
@@ -70,17 +70,24 @@ class SignInActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
         }
 
-
         signInButton?.setOnClickListener {
-            if (stringLogin != null && stringPassword != null) {
-                getToken(stringLogin!!, stringPassword!!)
-                val tokenExists = getSharedPreferences("SPBGo", MODE_PRIVATE).contains("token")
-                if (tokenExists) {
-                    startActivity(Intent(this, EventsListActivity::class.java))
-                    finish()
-                } else {
-                    Toast.makeText(this, "Требуется регистрация", Toast.LENGTH_SHORT).show()
+            GlobalScope.launch(Dispatchers.Main) {
+                if (stringLogin != null && stringPassword != null) {
+                    signInButton!!.isEnabled = false
+                    getToken(stringLogin!!, stringPassword!!)
+                    val tokenExists = getSharedPreferences("SPBGo", MODE_PRIVATE).contains("token")
+                    if (tokenExists) {
+                        startActivity(Intent(this@SignInActivity, EventsListActivity::class.java))
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            this@SignInActivity,
+                            "Требуется регистрация",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
+                signInButton!!.isEnabled = true
             }
         }
 
@@ -133,19 +140,20 @@ class SignInActivity : AppCompatActivity() {
         })
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    fun getToken(login: String, password: String) {
-        // Toast.makeText(this, "хорош", Toast.LENGTH_SHORT).show()
 
-        // Create JSON using JSONObject
-        val jsonObject = JSONObject()
-        jsonObject.put("login", login)
-        jsonObject.put("password", password)
+    private suspend fun getToken(login: String, password: String) {
+        withContext(Dispatchers.IO) {
+            // Toast.makeText(this, "хорош", Toast.LENGTH_SHORT).show()
 
-        // Convert JSONObject to String
-        val jsonObjectString = jsonObject.toString()
+            // Create JSON using JSONObject
+            val jsonObject = JSONObject()
+            jsonObject.put("login", login)
+            jsonObject.put("password", password)
 
-        GlobalScope.launch(Dispatchers.IO) {
+            // Convert JSONObject to String
+            val jsonObjectString = jsonObject.toString()
+
+
             val url = URL("http://77.234.215.138:60866/spbgo/api/signin")
             val httpURLConnection = url.openConnection() as HttpURLConnection
             httpURLConnection.requestMethod = "POST"
