@@ -13,7 +13,7 @@ import java.util.*
 class EventsApi() {
 
     // URL для обращения к серверу
-    private val url = "http://77.234.215.138:60866/spbgo/api/events?offset=0&limit=25"
+    private val url = "http://77.234.215.138:60866/spbgo/api/events?offset=0&limit=60"
 
     // Функция для отправки запроса к серверу, возвращающая список мероприятий
     fun getRequest(access_token: String): MutableList<Event> {
@@ -31,6 +31,20 @@ class EventsApi() {
             httpURLConnection.requestMethod = "GET"
             httpURLConnection.doInput = true
             httpURLConnection.connectTimeout = 300000
+
+            // Если ответ сервера равен 400 (Bad Request), то возвращаем список с bedRequestEvent
+            if (httpURLConnection.responseCode == 400) {
+                val bedRequestEvent = Event(
+                    id = UUID.randomUUID(),
+                    title = "Bad Request",
+                    image = "Bad Request",
+                    date = "Bad Request",
+                    dayOfWeek = "Bad Request",
+                    isPaid = false,
+                    siteUrl = "Bad Request"
+                )
+                return mutableListOf(bedRequestEvent)
+            }
 
             // Считываем входящие данные в формате строки
             val streamReader = InputStreamReader(httpURLConnection.inputStream)
@@ -98,6 +112,3 @@ class EventsApi() {
         return "${first_letter}${string.drop(1)}"
     }
 }
-
-
-
