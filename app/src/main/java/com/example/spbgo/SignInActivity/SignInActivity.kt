@@ -60,7 +60,7 @@ class SignInActivity : AppCompatActivity() {
         val tokenBeing = getSharedPreferences("SPBGo", MODE_PRIVATE).contains("token")
 
         if (tokenBeing) {
-            val token = getSharedPreferences("SPBGo", MODE_PRIVATE).getString("token", "-1")
+            // val token = getSharedPreferences("SPBGo", MODE_PRIVATE).getString("token", "-1")
             // Toast.makeText(this, token, Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, EventsListActivity::class.java))
             finish()
@@ -73,10 +73,14 @@ class SignInActivity : AppCompatActivity() {
 
         signInButton?.setOnClickListener {
             if (stringLogin != null && stringPassword != null) {
-
                 getToken(stringLogin!!, stringPassword!!)
-                startActivity(Intent(this, EventsListActivity::class.java))
-                finish()
+                val tokenExists = getSharedPreferences("SPBGo", MODE_PRIVATE).contains("token")
+                if (tokenExists) {
+                    startActivity(Intent(this, EventsListActivity::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Требуется регистрация", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
