@@ -33,7 +33,7 @@ class SignInActivity : AppCompatActivity() {
     @SuppressLint("ResourceAsColor")
     fun btnEnable() {
         if (isLoginFound && isPasswordRight) {
-            signInButton?.setBackgroundColor(R.color.colorMain)
+            signInButton?.setBackgroundColor(Color.BLUE)
             signInButton?.isClickable = true
         } else {
             signInButton?.isClickable = false
@@ -78,7 +78,7 @@ class SignInActivity : AppCompatActivity() {
                     val tokenExists = getSharedPreferences("SPBGo", MODE_PRIVATE).contains("token")
                     if (tokenExists) {
                         startActivity(Intent(this@SignInActivity, EventsListActivity::class.java))
-                        finish()
+                        finishAffinity()
                     } else {
                         Toast.makeText(
                             this@SignInActivity,
