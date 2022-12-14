@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -74,7 +75,13 @@ class EventsListActivity : AppCompatActivity() {
         // Узнаём у сервера имя пользователя и вставляем в соответствующее текстовое поле
         val usernameApi = UsernameApi()
         Thread{
-            username = usernameApi.getResponse(accessToken)
+            // Даелаем запрос имени до пяти раз
+            for (i in 0 until 5) {
+                username = usernameApi.getResponse(accessToken)
+                if (username != "") break
+            }
+
+            // Устанавливаем имя пользователя
             this@EventsListActivity.runOnUiThread(java.lang.Runnable {
                 usernameTextView = findViewById(R.id.username)
                 usernameTextView.text = username
@@ -84,7 +91,20 @@ class EventsListActivity : AppCompatActivity() {
         // Получаем данные с сервера в отдельном потоке и обновляем список мероприятий
         val api = EventsApi()
         Thread{
-            eventsListApi = api.getRequest(accessToken)
+            // Можем сделать запрос до пяти раз
+            for (i in 0 until 5) {
+                // Делаем запрос
+                eventsListApi = api.getRequest(accessToken)
+                // Если мероприятия получены, то выходим из цикла
+                if (eventsListApi.size != 0) break
+            }
+
+            // Если мероприятий всё равно нет, то выводим сообщение об ошибке
+            if (eventsListApi.size == 0) {
+                Toast.makeText(this, "Ошибка подключения", Toast.LENGTH_SHORT).show()
+            }
+
+            // Обновляем список мероприятий в основном потоке
             this@EventsListActivity.runOnUiThread(java.lang.Runnable {
                 findViewById<ContentLoadingProgressBar>(R.id.loadingPanel).isVisible = false // Убираем анимацию загрузки
                 updateEventsList()
@@ -96,14 +116,8 @@ class EventsListActivity : AppCompatActivity() {
 
         // Устанавливаем слушателя для реагирования на нажатие на кнопку выхода
         exitButton.setOnClickListener {
-            // Удаляем значение токена из памяти
-            val editor = sharedPreferences.edit()
-            editor.remove("token")
-            editor.apply()
-
-            // Переходим на страницу авторизации
-            val intent = Intent(this@EventsListActivity, SignInActivity::class.java)
-            startActivity(intent)
+            // Выходим из списка мероприятий
+            exit()
         }
     }
 
@@ -119,7 +133,28 @@ class EventsListActivity : AppCompatActivity() {
     }
 
     // Обновяем список мероприятий, используя данные с сервера
-    fun updateEventsList() {
+    private fun updateEventsList() {
+
+        // Если возвращён индикатор плохого запроса (bedRequestEvent), то переходим на страницу регистрации
+        // (скорее всего, это вызвано истечением срока действия токена)
+        if (eventsListApi[0].title == "Bad Request") {
+            exit()
+            return
+        }
+
         adapter.events = eventsListApi
+    }
+
+    // Функция для выхода (разлогина) с экрана списка мероприятий
+    private fun exit() {
+        // Удаляем значение токена из памяти
+        val editor = getSharedPreferences("SPBGo", Context.MODE_PRIVATE).edit()
+        editor.remove("token")
+        editor.apply()
+
+        // Переходим на страницу авторизации
+        val intent = Intent(this@EventsListActivity, SignInActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
