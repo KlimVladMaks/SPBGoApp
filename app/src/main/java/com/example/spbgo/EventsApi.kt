@@ -22,10 +22,11 @@ class EventsApi() {
         var eventsText: String = ""
         val eventsList: MutableList<Event> = mutableListOf()
 
-        // Устанавливаем соединения с сервером
-        val httpURLConnection = URL(url).openConnection() as HttpURLConnection
-
+        // Отлавливаем ошибки
         try {
+            // Устанавливаем соединения с сервером
+            val httpURLConnection = URL(url).openConnection() as HttpURLConnection
+
             // Указываем параметры GET-запроса
             httpURLConnection.setRequestProperty("Access-Token", access_token)
             httpURLConnection.requestMethod = "GET"
@@ -80,20 +81,20 @@ class EventsApi() {
                 eventsList.add(event)
             }
 
-        } catch (e: Exception) {
-            // При возникновении ошибки, возвращаем пустой список
-            return mutableListOf()
-
-        } finally {
             // Разрываем соединение
             httpURLConnection.disconnect()
+
+            // Возвращаем список мероприятий
+            return eventsList
+
+        } catch (e: Exception) {
+            // При возникновении ошибки, возвращаем пустой список
+            return mutableListOf<Event>()
         }
-        // Возвращаем список мероприятий
-        return eventsList
     }
 
     // Функция для преобразования даты в формат дд.мм.гггг
-    fun formatDate(date: String): String {
+    private fun formatDate(date: String): String {
         // Выбираем из переданной строки год, месяц и день
         val year = date.slice(0..3)
         val month = date.slice(5..6)
@@ -104,7 +105,7 @@ class EventsApi() {
     }
 
     // Функция для добавления первой заглавной буквы в строку
-    fun capitalize(string: String): String {
+    private fun capitalize(string: String): String {
         // Берём первую букву переданной строки, приводим к верхнему регистру
         // и помещаем в начало исходной строки
         var first_letter = string[0].toChar()

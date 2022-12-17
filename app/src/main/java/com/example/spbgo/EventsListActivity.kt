@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -99,14 +100,16 @@ class EventsListActivity : AppCompatActivity() {
                 if (eventsListApi.size != 0) break
             }
 
-            // Если мероприятий всё равно нет, то выводим сообщение об ошибке
-            if (eventsListApi.size == 0) {
-                Toast.makeText(this, "Ошибка подключения", Toast.LENGTH_SHORT).show()
-            }
-
             // Обновляем список мероприятий в основном потоке
             this@EventsListActivity.runOnUiThread(java.lang.Runnable {
-                findViewById<ContentLoadingProgressBar>(R.id.loadingPanel).isVisible = false // Убираем анимацию загрузки
+
+                // Если мероприятий всё равно нет, то выводим сообщение об ошибке
+                if (eventsListApi.size == 0) {
+                    Toast.makeText(this, "Ошибка подключения", Toast.LENGTH_SHORT).show()
+                }
+
+                // Убираем анимацию загрузки и обновляем список
+                findViewById<ContentLoadingProgressBar>(R.id.loadingPanel).isVisible = false
                 updateEventsList()
             })
         }.start()
@@ -137,7 +140,7 @@ class EventsListActivity : AppCompatActivity() {
 
         // Если возвращён индикатор плохого запроса (bedRequestEvent), то переходим на страницу регистрации
         // (скорее всего, это вызвано истечением срока действия токена)
-        if (eventsListApi[0].title == "Bad Request") {
+        if ((eventsListApi.size != 0) && (eventsListApi[0].title == "Bad Request")) {
             exit()
             return
         }
