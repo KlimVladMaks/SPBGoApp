@@ -20,10 +20,11 @@ class UsernameApi() {
         // Строка для записи имени пользователя
         val username: String
 
-        // Устанавливаем соединения с сервером
-        val httpURLConnection = URL(url).openConnection() as HttpURLConnection
-
+        // Отлавливаем ошибки
         try {
+            // Устанавливаем соединения с сервером
+            val httpURLConnection = URL(url).openConnection() as HttpURLConnection
+
             // Указываем параметры GET-запроса
             httpURLConnection.setRequestProperty("Access-Token", access_token)
             httpURLConnection.requestMethod = "GET"
@@ -41,18 +42,16 @@ class UsernameApi() {
             // Вытаскиваем имя пользователя из JSON-объекта
             username = usernameJsonObject.getString("login")
 
+            // Разрываем соединение
+            httpURLConnection.disconnect()
+
+            // Возвращаем имя пользователя
+            return username
+
         } catch (e: Exception) {
 
             // В случае ошибки возвращаем пустую строку
             return ""
-
-        } finally {
-
-            // Разрываем соединение
-            httpURLConnection.disconnect()
         }
-
-        // Возвращаем имя пользователя
-        return username
     }
 }
